@@ -1,0 +1,40 @@
+NAME: tan  # will create a folder under ./logs with this name
+PRETRAIN:
+  GPUS: -1  # default on 4 GPUs
+  ALGO: TAN
+  EPOCH: 500
+  WARMUP: 50
+  ARCH:
+    ARCH: Transformer
+    LAYER: 3
+    DIM: 512
+    DROPOUT: 0.0  # no need to change
+  PROTECTION: 2  # 0 for no protect, 1 for half protection, 2 for full protection
+  DATA: # look up this: https://aistdancedb.ongaaccel.jp/data_formats/#dance-genres
+    DATA_DIR: ../aistplusplus
+    GENRE: 10  # number of genres to use, maximum 10, no need to change
+    SPLIT: 1234  # 1234 or 4321
+    BS: 32
+    MIN_LENGTH: 64
+    MAX_LENGTH: 64
+    AUG_SHIFT_PROB: 1
+    AUG_ROT_PROB: 1
+    AUG_TIME_PROB: 1
+    NUM_WORKERS: 4
+    AUG_SHIFT_RANGE: 0.4  # in meter, length of an interval centered at 0
+    AUG_ROT_RANGE: 0.2  # take value from 0 to 2
+    AUG_TIME_RATE: 1.99  # take value from 1 to 1.99
+  TRAINER:
+    VAL_STEP: 5
+    ACCELERATOR: ddp
+    LR: 2.5e-5
+    OPTIM: adam  # sgd or adam
+    LARS: False  # use only when OPTIM is sgd
+  VALIDATION:
+CLUSTER:
+  TYPE: kmeans_skl
+  GENRE: 10  # the index of genre to use (0~9), 10 means all genre
+  K_MIN: 150
+  K_MAX: 160  # with a step of 10
+  TIMES: 10  # how many kmeans is run
+  CKPT: -1  # NAME want to evaluate, if -1 use NAME in this config
